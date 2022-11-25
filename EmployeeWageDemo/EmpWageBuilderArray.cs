@@ -1,31 +1,47 @@
 ﻿using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 namespace EmployeeWageDemo
 {
-    public class EmpWageBuilderArray : IComputeEmpWage
+    public class EmpWageBuilder : IComputeEmpWage
     {
         public const int IS_PART_TIME = 1;
         public const int IS_FULL_TIME = 2;
-        List<CompanyEmpWage> listObj = new List<CompanyEmpWage>();  //using List .
-        private CompanyEmpWage companyEmpWageObj;
+        private LinkedList<CompanyEmpWage> companyEmpWageList;
+        private Dictionary<string, CompanyEmpWage> companyToEmpWageMap;
+        public EmpWageBuilder()
+        {
+            this.companyEmpWageList = new LinkedList<CompanyEmpWage>();
+            this.companyToEmpWageMap = new Dictionary<string, CompanyEmpWage>();
+        }
         public void AddCompanyEmpWage(string company, int empRateperHour, int numOfWorkingDays, int maxHoursPermonth)
         {
-            this.companyEmpWageObj = new CompanyEmpWage(company, empRateperHour, numOfWorkingDays, maxHoursPermonth);
-            listObj.Add(this.companyEmpWageObj);
+            CompanyEmpWage companyEmpWage = new CompanyEmpWage(company, empRateperHour, numOfWorkingDays, maxHoursPermonth);
+            this.companyEmpWageList.AddLast(companyEmpWage);
+            this.companyToEmpWageMap.Add(company, companyEmpWage);
         }
         public void ComputeEmpWage()
         {
-            foreach (var item in listObj)
+            Console.WriteLine("Enter your company name so that we will show you the details of your employee wage");
+            string verifyingCompany;
+            verifyingCompany = Console.ReadLine();
+            foreach (CompanyEmpWage companyEmpWage in this.companyEmpWageList)
             {
-                companyEmpWageObj.SetTotalEmpWage(ComputeEmpWage(item));
-                item.SetTotalEmpWage(companyEmpWageObj.totalEmpWage);
-                Console.WriteLine(item.ToString());
+                if (companyEmpWage.company != verifyingCompany)     //filtering code added to provide only specific comp emp wage UC14 .
+                {
+                    continue;
+                }
+                else
+                {
+                    companyEmpWage.SetTotalEmpWage(this.ComputeEmpWage(companyEmpWage));
+                    Console.WriteLine(companyEmpWage.ToString());
+                }
             }
         }
-        private int ComputeEmpWage(CompanyEmpWage companyEmpWage)
+        private int ComputeEmpWage(CompanyEmpWage companyEmpWage)//the main calculation for empWage will be done here and output is traversing from here .
         {
             int empHrs = 0, totalEmpHrs = 0, totalWorkingDays = 0;
             while (totalEmpHrs <= companyEmpWage.maxHoursPerMonth && totalWorkingDays < companyEmpWage.numOfWorkingDays)
@@ -46,10 +62,13 @@ namespace EmployeeWageDemo
                         break;
                 }
                 totalEmpHrs += empHrs;
-                int wageUpToDate = totalEmpHrs * companyEmpWage.empRatePerHour;//calculating till the date earned amount .
-                Console.WriteLine("Days#:"+totalWorkingDays+" Emp Hrs:"+empHrs+" and Wage till day "+ totalWorkingDays+" is:"+ wageUpToDate);
+                Console.WriteLine("Days#:" + totalWorkingDays + "Emp Hrs : " + empHrs);
             }
             return totalEmpHrs * companyEmpWage.empRatePerHour;
+        }
+        public int GetTotalWage(string company)
+        {
+            return this.companyToEmpWageMap[company].totalEmpWage;
         }
     }
 }
