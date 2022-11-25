@@ -3,27 +3,26 @@ using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace EmployeeWageDemo
 {
     public class EmpWageBuilderArray : IComputeEmpWage
     {
         public const int IS_PART_TIME = 1;
-        public const int IS_FULL_TIME = 2; 
-        ArrayList listObj=new ArrayList();    //using ArrayList instead of Array.
+        public const int IS_FULL_TIME = 2;
+        List<CompanyEmpWage> listObj = new List<CompanyEmpWage>();  //using List .
         private CompanyEmpWage companyEmpWageObj;
         public void AddCompanyEmpWage(string company, int empRateperHour, int numOfWorkingDays, int maxHoursPermonth)
         {
-            this.companyEmpWageObj = new CompanyEmpWage(company,empRateperHour,numOfWorkingDays, maxHoursPermonth);
+            this.companyEmpWageObj = new CompanyEmpWage(company, empRateperHour, numOfWorkingDays, maxHoursPermonth);
             listObj.Add(this.companyEmpWageObj);
         }
         public void ComputeEmpWage()
         {
-            foreach (CompanyEmpWage companyEmpWage in listObj)
+            foreach (var item in listObj)
             {
-                companyEmpWageObj.SetTotalEmpWage(ComputeEmpWage(companyEmpWage));
-                companyEmpWage.SetTotalEmpWage(companyEmpWageObj.totalEmpWage);
-                Console.WriteLine(companyEmpWage.ToString());
+                companyEmpWageObj.SetTotalEmpWage(ComputeEmpWage(item));
+                item.SetTotalEmpWage(companyEmpWageObj.totalEmpWage);
+                Console.WriteLine(item.ToString());
             }
         }
         private int ComputeEmpWage(CompanyEmpWage companyEmpWage)
@@ -47,7 +46,8 @@ namespace EmployeeWageDemo
                         break;
                 }
                 totalEmpHrs += empHrs;
-                Console.WriteLine("Days#:" + totalWorkingDays + "Emp Hrs : " + empHrs);
+                int wageUpToDate = totalEmpHrs * companyEmpWage.empRatePerHour;//calculating till the date earned amount .
+                Console.WriteLine("Days#:"+totalWorkingDays+" Emp Hrs:"+empHrs+" and Wage till day "+ totalWorkingDays+" is:"+ wageUpToDate);
             }
             return totalEmpHrs * companyEmpWage.empRatePerHour;
         }
