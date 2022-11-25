@@ -13,18 +13,18 @@ namespace EmployeeWageDemo
         public int numOfWorkingDays;
         public int maxHoursPerMonth;
         public int totalEmpWage;
-        public CompanyEmpWage(string company, int empRatePerHour, int numOfWorkingDays, int maxHoursPerMonth)//initializing all variabeles
+        public CompanyEmpWage(string company, int empRatePerHour, int numOfWorkingDays, int maxHoursPerMonth)
         {
             this.company = company;
             this.empRatePerHour = empRatePerHour;
             this.numOfWorkingDays = numOfWorkingDays;
             this.maxHoursPerMonth = maxHoursPerMonth;
         }
-        public void setTotalEmpWage(int totalEmpWage)//setter method used to set the value of empWage of this class ("this" keyword has been used as an reference for current class instance variable)
+        public void setTotalEmpWage(int totalEmpWage)
         {
             this.totalEmpWage = totalEmpWage;
         }
-        public override string ToString()//representing objects into string so it can be readable .
+        public override string ToString()
         {
             return "Total Emp Wage for company : " + this.company + " is : " + this.totalEmpWage;
         }
